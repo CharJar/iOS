@@ -17,9 +17,9 @@ class Project {
 	var totalAmountToDate: Double
 	var description: String
 	//var organization: Organization
-	var media: Array<String>
+	var media: String
 	
-	init(id: String, name: String, startDate: String, endDate: String, goalAmount: Double, totalAmountToDate: Double, description: String, media: Array<String>) {
+	init(id: String, name: String, startDate: String, endDate: String, goalAmount: Double, totalAmountToDate: Double, description: String, media: String) {
 		self.id = id
 		self.name = name
 		self.startDate = startDate

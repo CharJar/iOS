@@ -26,24 +26,26 @@ class CardStackViewController: UIViewController {
 		backgroundImg.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
 		backgroundImg.contentMode = UIViewContentMode.ScaleAspectFit	// Problems with iPhone4?
 		self.view.insertSubview(backgroundImg, atIndex: 0)
-		
-		// Have a loading wheel of some sort...?
-		
+
+
 		// 1. REST call to get all the nearby projects, update projectStack
-		projectStack = Services.getProjects("32", count: 2)
+		projectStack = Services.getProjects("32", count: 4)
 		
 		// 2. Immediately fill in the top/first CardView for viewing ?
-		topCard.lblProjectName.text = projectStack[0].description //"Puppy Shelter for a Month"
-		topCard.lblOrganizationName.text = projectStack[0].name //"By: Austin Pets Alive!"
-		topCard.lblProjectDetails.text = projectStack[0].description //"We want to buy food for over 300 dogs and cats , will last over a month, and will do a bunch of other exciting things that save the lives of many adorable puppies."
-		topCard.imgProjectMedia.image = UIImage(named: "puppy")
+		topCard.lblProjectName.text = projectStack[0].name //"Puppy Shelter for a Month"
+		topCard.lblOrganizationName.text = "" //"By: Austin Pets Alive!"
+		topCard.lblProjectDetails.text = projectStack[0].description
 		
-		// We need this for later!
+		//"We want to buy food for over 300 dogs and cats , will last over a month, and will do a bunch of other exciting things that save the lives of many adorable puppies."
+		topCard.imgProjectMedia.image = UIImage(named: "puppy")
+		cardStack.append(topCard)
+		
 		mainCardFrame = topCard.frame
 		
 		for (proj: Project) in projectStack {
 			cardStack.append(createCardView(proj))
 		}
+		cardStack.removeAtIndex(0)	// Remove 1st, since that was already pushed on as "topCard"
     }
 	
 
@@ -61,33 +63,17 @@ class CardStackViewController: UIViewController {
 			width: mainCardFrame.width,
 			height: mainCardFrame.height)
 		newCard = CardView(frame: topFrame)
-		newCard.lblProjectName.text = "Dental Care for 3rd World"
-		newCard.lblOrganizationName.text = "By: Medico"
-		newCard.lblProjectDetails.text = "We want to buy 2 new dental units that will enable us to give proper dental care to villages in the 3rd world."
-		newCard.imgProjectMedia.image = UIImage(named: "puppy")
+		newCard.lblProjectName.text = project.name//"Dental Care for 3rd World"
+		newCard.lblOrganizationName.text = ""//"By: Medico"
+		newCard.lblProjectDetails.text = project.description// "We want to buy 2 new dental units that will enable us to give proper dental care to villages in the 3rd world."
+		let data = NSData(contentsOfURL: NSURL(string: "http://charjar.me/images/\(project.media)")!)
+		newCard.imgProjectMedia.image = UIImage(data: data!)
 		cardStack.append(newCard)
 		
 		return newCard
 	}
     
 	@IBAction func swipeRight_touch(sender: UISwipeGestureRecognizer) {
-		//println("Swipin' right!")
-//		var topFrame = CGRect(
-//			x: topCard.frame.origin.x,
-//			y: topCard.frame.origin.y - topCard.frame.height - 20,
-//			width: topCard.frame.width,
-//			height: topCard.frame.height)
-//		// 1. Create next card
-//		//var nextCard = createCardView(projectStack[1])
-//		var newCard = CardView(frame: topFrame)
-//		newCard.lblProjectName.text = "Dental Care for 3rd World"
-//		newCard.lblOrganizationName.text = "By: Medico"
-//		newCard.lblProjectDetails.text = "We want to buy 2 new dental units that will enable us to give proper dental care to villages in the 3rd world."
-//		newCard.imgProjectMedia.image = UIImage(named: "puppy")
-//		cardStack.append(newCard)
-//		self.view.insertSubview(newCard, belowSubview: topCard)
-//		cardStack.append(newCard)
-		
 		// 2. Process money & related stuff >.>
 		
 		// 3. Execute transition animation
@@ -99,50 +85,34 @@ class CardStackViewController: UIViewController {
 				width: self.mainCardFrame.width,
 				height: self.mainCardFrame.height)
 			
-			self.cardStack[0].frame = finalFrame
-			
-		}, completion: { finished in
-			// Create new card
-			// "Pop" off top card & remove it completely from the view & array
-			// Transition in the new card
-//			var topFrame = CGRect(
-//				x: self.mainCardFrame.origin.x,
-//				y: self.mainCardFrame.origin.y - self.mainCardFrame.height - 20,
-//				width: self.mainCardFrame.width,
-//				height: self.mainCardFrame.height)
-//			var newCard = CardView(frame: topFrame)
-//			newCard.lblProjectName.text = "Dental Care for 3rd World"
-//			newCard.lblOrganizationName.text = "By: Medico"
-//			newCard.lblProjectDetails.text = "We want to buy 2 new dental units that will enable us to give proper dental care to villages in the 3rd world."
-//			newCard.imgProjectMedia.image = UIImage(named: "puppy")
+			var topCard: CardView = self.viewMiddle.subviews[0] as! CardView
+			topCard.frame = finalFrame
 
+		}, completion: { finished in
 			
-			//self.cardStack.append(newCard)
-			//self.scrollView.addSubview(newCard)//insertSubview(newCard, belowSubview: self.cardStack[0])
+			for view in self.viewMiddle.subviews {
+				view.removeFromSuperview()
+			}
 			
-			//println("removing item")
-			self.cardStack[0].removeFromSuperview()
 			self.cardStack.removeAtIndex(0)
 			
 			// Adding new "index 0" card
 			self.viewMiddle.addSubview(self.cardStack[0])
 			
-//			UIView.transitionWithView(self.cardStack[0], duration: 0.5, options: transitionOptions, animations: {
-//				// Move in the next card from the top
-//				self.cardStack[0].frame = self.mainCardFrame
-//			}, completion: { finished in
-//				//println("new card transitioned in")
-//			})
-
+			var tempMainCardFrame = CGRect(x: self.mainCardFrame.origin.x - 25, y: self.mainCardFrame.origin.y - 65, width: self.mainCardFrame.width * 0.5, height: self.mainCardFrame.height)
 			
+			UIView.transitionWithView(self.cardStack[0], duration: 0.5, options: transitionOptions, animations: {
+				// Move in the next card from the top
+				self.cardStack[0].frame = tempMainCardFrame
+			}, completion: { finished in
+				//println("new card transitioned in")
+			})
 		})
 	}
 
 	@IBAction func swipeLeft_touch(sender: UISwipeGestureRecognizer) {
-		println("Swipin' left!")
 		// 1. Create next card
 		let transitionOptions = UIViewAnimationOptions.CurveEaseIn
-		let transOptions = UIViewAnimationOptions.CurveLinear
 		var curFrame = self.cardStack[0].frame
 		UIView.transitionWithView(cardStack[0], duration: 0.5, options: transitionOptions, animations: {
 			var finalFrame = CGRect(
@@ -151,25 +121,23 @@ class CardStackViewController: UIViewController {
 				width: self.mainCardFrame.width,
 				height: self.mainCardFrame.height)
 			
-			self.cardStack[0].frame = finalFrame
+			var topCard: CardView = self.viewMiddle.subviews[0] as! CardView
+			topCard.frame = finalFrame
 			
 		}, completion: { finished in
 		
-			var topFrame = CGRect(
-				x: self.mainCardFrame.origin.x,
-				y: self.mainCardFrame.origin.y - self.mainCardFrame.height - 20,
-				width: self.mainCardFrame.width,
-				height: self.mainCardFrame.height)
-			var newCard = CardView(frame: topFrame)
-			newCard.lblProjectName.text = "Dental Care for 3rd World"
-			newCard.lblOrganizationName.text = "By: Medico"
-			newCard.lblProjectDetails.text = "We want to buy 2 new dental units that will enable us to give proper dental care to villages in the 3rd world."
-			newCard.imgProjectMedia.image = UIImage(named: "puppy")
-		
+			for view in self.viewMiddle.subviews {
+				view.removeFromSuperview()
+			}
+			var topCard = self.cardStack.removeAtIndex(0)
+			
+			self.cardStack[0].frame = self.mainCardFrame
+			self.viewMiddle.addSubview(topCard)
+			
 			// Drop in new card
-			UIView.transitionWithView(newCard, duration: 0.5, options: transOptions, animations: {
+			UIView.transitionWithView(self.cardStack[0], duration: 0.5, options: transitionOptions, animations: {
 				// Move in the next card from the top
-				newCard.frame = curFrame
+				self.cardStack[0].frame = curFrame
 			}, completion: { finished in
 				//println("new card transitioned in")
 			})

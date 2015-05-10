@@ -162,7 +162,7 @@
                                 <rect key="frame" x="16" y="83" width="573" height="434"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VYU-yE-Mve" customClass="CardView" customModule="CharJar" customModuleProvider="target">
-                                        <rect key="frame" x="28" y="69" width="420" height="295"/>
+                                        <rect key="frame" x="28" y="69" width="492" height="295"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="500" id="R8V-WH-P1O"/>
                                         </constraints>
@@ -174,7 +174,7 @@
                                     </view>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="VYU-yE-Mve" secondAttribute="trailing" constant="24" id="4Nj-1r-Uc9"/>
+                                    <constraint firstAttribute="trailing" secondItem="VYU-yE-Mve" secondAttribute="trailing" constant="30" id="4Nj-1r-Uc9"/>
                                     <constraint firstAttribute="bottom" secondItem="VYU-yE-Mve" secondAttribute="bottom" id="erU-GR-2MI"/>
                                     <constraint firstItem="VYU-yE-Mve" firstAttribute="leading" secondItem="5eO-gV-Ah0" secondAttribute="leading" id="fPZ-Ka-V51"/>
                                     <constraint firstItem="VYU-yE-Mve" firstAttribute="top" secondItem="5eO-gV-Ah0" secondAttribute="top" id="lfY-vh-nvw"/>

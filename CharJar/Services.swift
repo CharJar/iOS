@@ -51,6 +51,9 @@ class Services {
 		let json = JSON(data: data)
 		for (key: String, subJson: JSON) in json {
 			//Do something you want
+			var media = subJson["media"][0].stringValue
+			
+			
 			var proj: Project = Project(
 				id: subJson["id"].stringValue,
 				name: subJson["name"].stringValue,
@@ -59,7 +62,7 @@ class Services {
 				goalAmount: subJson["goal"].doubleValue,
 				totalAmountToDate: 0.0,
 				description: subJson["description"].stringValue,
-				media: Array<String>())
+				media: media)
 			projects.append(proj)
 		}
 		
